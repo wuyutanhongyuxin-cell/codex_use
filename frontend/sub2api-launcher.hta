@@ -1,0 +1,295 @@
+<!doctype html>
+<html>
+<head>
+  <meta http-equiv="x-ua-compatible" content="IE=edge" />
+  <meta charset="utf-8" />
+  <title>Sub2API Launcher</title>
+  <hta:application
+    id="Sub2APILauncher"
+    applicationname="Sub2API Launcher"
+    border="thin"
+    caption="yes"
+    maximizebutton="no"
+    minimizebutton="yes"
+    scroll="no"
+    singleinstance="yes"
+    sysmenu="yes"
+    windowstate="normal" />
+  <style>
+    html, body {
+      margin: 0;
+      width: 760px;
+      height: 560px;
+      overflow: hidden;
+      color: #1c261f;
+      background: #f6f8f1;
+      font-family: "Microsoft YaHei", "Segoe UI", Arial, sans-serif;
+    }
+
+    body {
+      border-top: 8px solid #1e6b4c;
+    }
+
+    .shell {
+      padding: 26px 30px 24px;
+    }
+
+    .top {
+      display: table;
+      width: 100%;
+      margin-bottom: 22px;
+    }
+
+    .mark, .title {
+      display: table-cell;
+      vertical-align: middle;
+    }
+
+    .mark {
+      width: 74px;
+    }
+
+    .dial {
+      position: relative;
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: #1e6b4c;
+      box-shadow: inset 0 0 0 9px #cde66d;
+    }
+
+    .dial:after {
+      content: "";
+      position: absolute;
+      left: 25px;
+      top: 9px;
+      width: 6px;
+      height: 23px;
+      background: #f6f8f1;
+      border-radius: 3px;
+      transform: rotate(35deg);
+      transform-origin: bottom center;
+    }
+
+    h1 {
+      margin: 0 0 4px;
+      font-size: 30px;
+      line-height: 1.15;
+      font-weight: 800;
+      letter-spacing: 0;
+    }
+
+    .sub {
+      margin: 0;
+      color: #5f6f66;
+      font-size: 14px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-bottom: 18px;
+    }
+
+    .panel {
+      border: 1px solid #d7ded0;
+      background: #ffffff;
+      border-radius: 8px;
+      padding: 16px;
+      min-height: 118px;
+    }
+
+    .panel h2 {
+      margin: 0 0 8px;
+      font-size: 16px;
+      line-height: 1.3;
+    }
+
+    .panel p {
+      margin: 0 0 14px;
+      color: #627065;
+      font-size: 13px;
+      line-height: 1.55;
+    }
+
+    button {
+      height: 38px;
+      min-width: 124px;
+      padding: 0 14px;
+      border: 0;
+      border-radius: 7px;
+      background: #1e6b4c;
+      color: #ffffff;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    button.secondary {
+      background: #e7eed6;
+      color: #1f3529;
+      border: 1px solid #cdd9bd;
+    }
+
+    button.warn {
+      background: #7b2e2e;
+    }
+
+    .row {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .status {
+      margin-top: 15px;
+      padding: 12px 14px;
+      border-radius: 8px;
+      background: #eef4df;
+      border: 1px solid #d5e3bd;
+      color: #314235;
+      font-size: 13px;
+      line-height: 1.55;
+      min-height: 40px;
+    }
+
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      margin: 18px 0 0;
+    }
+
+    .step {
+      border-left: 4px solid #cde66d;
+      background: #ffffff;
+      padding: 10px 10px 10px 12px;
+      border-radius: 7px;
+      font-size: 12px;
+      line-height: 1.45;
+      color: #425147;
+    }
+
+    .step strong {
+      display: block;
+      margin-bottom: 4px;
+      color: #1c261f;
+      font-size: 13px;
+    }
+
+    .path {
+      margin-top: 16px;
+      color: #68756d;
+      font-family: Consolas, "Courier New", monospace;
+      font-size: 11px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  </style>
+  <script language="javascript">
+    var workspace = "E:\\claude_ask\\bilibili_learn\\codex_use";
+    var ps = "powershell.exe -NoProfile -ExecutionPolicy Bypass";
+
+    function shell() {
+      return new ActiveXObject("WScript.Shell");
+    }
+
+    function setStatus(text) {
+      document.getElementById("status").innerText = text;
+    }
+
+    function run(command, message) {
+      try {
+        shell().Run(command, 1, false);
+        setStatus(message);
+      } catch (e) {
+        setStatus("启动失败：" + e.message);
+      }
+    }
+
+    function startService() {
+      var file = workspace + "\\scripts\\start-sub2api.ps1";
+      run(ps + " -File \"" + file + "\"", "正在启动。第一次会下载 Docker 镜像，可能需要几分钟。管理台地址：http://localhost:8080");
+    }
+
+    function stopService() {
+      var file = workspace + "\\scripts\\stop-sub2api.ps1";
+      run(ps + " -File \"" + file + "\"", "正在停止 Sub2API。窗口执行完成后服务会关闭。");
+    }
+
+    function openAdmin() {
+      run("cmd.exe /c start \"\" \"http://localhost:8080\"", "已打开管理台。如果页面打不开，请先点击“启动服务”。");
+    }
+
+    function showLogs() {
+      var cmd = "powershell.exe -NoExit -NoProfile -ExecutionPolicy Bypass -Command \"Set-Location '" + workspace + "\\runtime\\sub2api'; docker compose logs -f sub2api\"";
+      run(cmd, "已打开日志窗口。看到 admin password 时，把它用于首次登录。");
+    }
+
+    function openFolder() {
+      run("explorer.exe \"" + workspace + "\"", "已打开项目目录。");
+    }
+
+    window.onload = function () {
+      window.resizeTo(780, 610);
+      setStatus("准备好了。建议顺序：启动服务 -> 查看日志拿初始密码 -> 打开管理台 -> 添加账号和 API Key。");
+    };
+  </script>
+</head>
+<body>
+  <div class="shell">
+    <div class="top">
+      <div class="mark"><div class="dial"></div></div>
+      <div class="title">
+        <h1>Sub2API 傻瓜启动器</h1>
+        <p class="sub">把命令行步骤收进按钮里。账号、Cookie、API Key 仍然只在你本机处理。</p>
+      </div>
+    </div>
+
+    <div class="grid">
+      <div class="panel">
+        <h2>启动服务</h2>
+        <p>启动 Sub2API、PostgreSQL、Redis。第一次会自动拉取 Docker 镜像。</p>
+        <button onclick="startService()">启动服务</button>
+      </div>
+
+      <div class="panel">
+        <h2>打开管理台</h2>
+        <p>服务启动后进入管理台，在里面添加账号、生成 API Key。</p>
+        <button onclick="openAdmin()">打开管理台</button>
+      </div>
+
+      <div class="panel">
+        <h2>查看日志</h2>
+        <p>首次运行时，日志里会显示自动生成的管理员密码。</p>
+        <button class="secondary" onclick="showLogs()">查看日志</button>
+      </div>
+
+      <div class="panel">
+        <h2>停止服务</h2>
+        <p>不用的时候关闭容器，数据会保留在本地 runtime 目录。</p>
+        <button class="warn" onclick="stopService()">停止服务</button>
+      </div>
+    </div>
+
+    <div class="row">
+      <button class="secondary" onclick="openFolder()">打开项目目录</button>
+      <button class="secondary" onclick="setStatus('客户端地址通常填：http://localhost:8080/openai/v1；API Key 在管理台生成。')">显示客户端配置</button>
+    </div>
+
+    <div id="status" class="status"></div>
+
+    <div class="steps">
+      <div class="step"><strong>1. 启动</strong>点击启动服务，等 Docker 完成。</div>
+      <div class="step"><strong>2. 登录</strong>查看日志，拿管理员密码。</div>
+      <div class="step"><strong>3. 添加账号</strong>在管理台配置上游账号。</div>
+      <div class="step"><strong>4. 接入</strong>用 API Key 和本地 Base URL。</div>
+    </div>
+
+    <div class="path">工作区：E:\claude_ask\bilibili_learn\codex_use</div>
+  </div>
+</body>
+</html>

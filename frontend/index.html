@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Sub2API 本地操作台</title>
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <main class="layout">
+    <section class="hero">
+      <div class="gauge" aria-hidden="true"><span></span></div>
+      <div>
+        <h1>Sub2API 本地操作台</h1>
+        <p>桌面启动器负责点按钮；这个页面负责告诉你每一步该填什么。</p>
+      </div>
+    </section>
+
+    <section class="actions" aria-label="常用操作">
+      <article>
+        <h2>启动</h2>
+        <p>双击桌面上的 <strong>Sub2API 傻瓜启动器.hta</strong>，点击“启动服务”。</p>
+        <code>.\scripts\start-sub2api.ps1</code>
+      </article>
+      <article>
+        <h2>管理台</h2>
+        <p>服务启动后打开管理台，添加上游账号并生成 API Key。</p>
+        <code>http://localhost:8080</code>
+      </article>
+      <article>
+        <h2>客户端</h2>
+        <p>OpenAI 兼容客户端通常填这个 Base URL。</p>
+        <code>http://localhost:8080/openai/v1</code>
+      </article>
+      <article>
+        <h2>停止</h2>
+        <p>不用时回到启动器，点击“停止服务”。数据仍保留在本地。</p>
+        <code>.\scripts\stop-sub2api.ps1</code>
+      </article>
+    </section>
+  </main>
+</body>
+</html>
