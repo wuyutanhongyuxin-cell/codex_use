@@ -1,10 +1,11 @@
 $ErrorActionPreference = "Stop"
+. (Join-Path $PSScriptRoot "Resolve-Docker.ps1")
 
 Write-Host "Sub2API local prerequisites"
 Write-Host "==========================="
 Write-Host ""
 
-$docker = Get-Command docker -ErrorAction SilentlyContinue
+$docker = Resolve-DockerCommand
 if (-not $docker) {
     Write-Host "[missing] Docker command was not found."
     Write-Host ""
@@ -16,27 +17,31 @@ if (-not $docker) {
     exit 1
 }
 
-Write-Host "[ok] Docker command: $($docker.Source)"
-docker --version
+Write-Host "[ok] Docker command: $docker"
+& $docker --version
+if ($LASTEXITCODE -ne 0) {
+    exit $LASTEXITCODE
+}
 
-try {
-    docker compose version
-} catch {
+& $docker compose version
+if ($LASTEXITCODE -ne 0) {
     Write-Host ""
     Write-Host "[missing] Docker Compose is not available through Docker."
     Write-Host "Docker Desktop normally includes Docker Compose."
-    exit 1
+    exit $LASTEXITCODE
 }
 
-try {
-    docker info | Out-Null
-    Write-Host "[ok] Docker engine is running."
-} catch {
+& $docker info | Out-Null
+if ($LASTEXITCODE -ne 0) {
     Write-Host ""
-    Write-Host "[not running] Docker is installed, but the Docker engine is not running."
-    Write-Host "Open Docker Desktop and wait until it says it is running, then try again."
-    exit 1
+    Write-Host "[not ready] Docker is installed, but this PowerShell session cannot use the Docker engine."
+    Write-Host "Open Docker Desktop and wait until it says Engine running."
+    Write-Host "If it already says Engine running, restart Windows once and try again."
+    Write-Host ""
+    Write-Host "Docker printed the original error above."
+    exit $LASTEXITCODE
 }
 
+Write-Host "[ok] Docker engine is running."
 Write-Host ""
 Write-Host "All required local prerequisites are ready."
