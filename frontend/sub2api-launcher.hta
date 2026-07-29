@@ -210,14 +210,23 @@
       }
     }
 
+    function checkPrereqs() {
+      var file = workspace + "\\scripts\\check-sub2api-prereqs.ps1";
+      run("powershell.exe -NoExit -NoProfile -ExecutionPolicy Bypass -File \"" + file + "\"", "已打开检查窗口。先确认 Docker Desktop 是否安装并正在运行。");
+    }
+
+    function openDockerDownload() {
+      run("cmd.exe /c start \"\" \"https://www.docker.com/products/docker-desktop/\"", "已打开 Docker Desktop 官方下载页。安装后重启电脑或重新打开 PowerShell。");
+    }
+
     function startService() {
       var file = workspace + "\\scripts\\start-sub2api.ps1";
-      run(ps + " -File \"" + file + "\"", "正在启动。第一次会下载 Docker 镜像，可能需要几分钟。管理台地址：http://localhost:8080");
+      run("powershell.exe -NoExit -NoProfile -ExecutionPolicy Bypass -File \"" + file + "\"", "正在启动。第一次会下载 Docker 镜像，可能需要几分钟。管理台地址：http://localhost:8080");
     }
 
     function stopService() {
       var file = workspace + "\\scripts\\stop-sub2api.ps1";
-      run(ps + " -File \"" + file + "\"", "正在停止 Sub2API。窗口执行完成后服务会关闭。");
+      run("powershell.exe -NoExit -NoProfile -ExecutionPolicy Bypass -File \"" + file + "\"", "正在停止 Sub2API。窗口执行完成后服务会关闭。");
     }
 
     function openAdmin() {
@@ -235,7 +244,7 @@
 
     window.onload = function () {
       window.resizeTo(780, 610);
-      setStatus("准备好了。建议顺序：启动服务 -> 查看日志拿初始密码 -> 打开管理台 -> 添加账号和 API Key。");
+      setStatus("准备好了。先点“检查环境”。如果缺 Docker，先安装 Docker Desktop。");
     };
   </script>
 </head>
@@ -250,6 +259,15 @@
     </div>
 
     <div class="grid">
+      <div class="panel">
+        <h2>检查环境</h2>
+        <p>先确认 Docker Desktop 已安装并正在运行。缺 Docker 时服务无法启动。</p>
+        <div class="row">
+          <button onclick="checkPrereqs()">检查环境</button>
+          <button class="secondary" onclick="openDockerDownload()">安装 Docker</button>
+        </div>
+      </div>
+
       <div class="panel">
         <h2>启动服务</h2>
         <p>启动 Sub2API、PostgreSQL、Redis。第一次会自动拉取 Docker 镜像。</p>

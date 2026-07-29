@@ -12,6 +12,12 @@ sub2api
 .\scripts\setup-sub2api.ps1
 ```
 
+检查 Docker 环境：
+
+```powershell
+.\scripts\check-sub2api-prereqs.ps1
+```
+
 启动服务：
 
 ```powershell
