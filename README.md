@@ -43,6 +43,12 @@ http://localhost:8080
 .\scripts\stop-sub2api.ps1
 ```
 
+首次安装如果 PostgreSQL 显示 unhealthy，可以重建本地容器和卷：
+
+```powershell
+.\scripts\reset-sub2api-local.ps1
+```
+
 ## 多账号教程
 
 见：

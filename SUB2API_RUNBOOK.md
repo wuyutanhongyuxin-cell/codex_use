@@ -42,6 +42,12 @@ http://localhost:8080
 .\scripts\stop-sub2api.ps1
 ```
 
+如果第一次启动时 PostgreSQL 显示 unhealthy，说明本地容器初始化失败。首次安装还没有重要数据时，可以重建本地容器和卷：
+
+```powershell
+.\scripts\reset-sub2api-local.ps1
+```
+
 安全约束：
 
 - 不把 cookie、API Key、账号密码写进仓库。

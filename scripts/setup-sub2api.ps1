@@ -56,6 +56,14 @@ $envText = $envText -replace "(?m)^ADMIN_EMAIL=.*$", "ADMIN_EMAIL=$AdminEmail"
 $envText = $envText -replace "(?m)^ADMIN_PASSWORD=.*$", "ADMIN_PASSWORD=$(New-HexSecret 18)"
 $envText = $envText -replace "(?m)^JWT_SECRET=.*$", "JWT_SECRET=$(New-HexSecret 32)"
 $envText = $envText -replace "(?m)^TOTP_ENCRYPTION_KEY=.*$", "TOTP_ENCRYPTION_KEY=$(New-HexSecret 32)"
+$envText = $envText -replace "(?m)^POSTGRES_MAX_CONNECTIONS=.*$", "POSTGRES_MAX_CONNECTIONS=100"
+$envText = $envText -replace "(?m)^POSTGRES_SHARED_BUFFERS=.*$", "POSTGRES_SHARED_BUFFERS=128MB"
+$envText = $envText -replace "(?m)^POSTGRES_EFFECTIVE_CACHE_SIZE=.*$", "POSTGRES_EFFECTIVE_CACHE_SIZE=512MB"
+$envText = $envText -replace "(?m)^POSTGRES_MAINTENANCE_WORK_MEM=.*$", "POSTGRES_MAINTENANCE_WORK_MEM=64MB"
+$envText = $envText -replace "(?m)^DATABASE_MAX_OPEN_CONNS=.*$", "DATABASE_MAX_OPEN_CONNS=50"
+$envText = $envText -replace "(?m)^DATABASE_MAX_IDLE_CONNS=.*$", "DATABASE_MAX_IDLE_CONNS=10"
+$envText = $envText -replace "(?m)^REDIS_POOL_SIZE=.*$", "REDIS_POOL_SIZE=128"
+$envText = $envText -replace "(?m)^REDIS_MIN_IDLE_CONNS=.*$", "REDIS_MIN_IDLE_CONNS=10"
 
 Set-Content -LiteralPath $targetEnv -Value $envText -Encoding UTF8
 

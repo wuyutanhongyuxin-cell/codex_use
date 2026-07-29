@@ -238,6 +238,16 @@
       run(cmd, "已打开日志窗口。看到 admin password 时，把它用于首次登录。");
     }
 
+    function resetLocal() {
+      var file = workspace + "\\scripts\\reset-sub2api-local.ps1";
+      var ok = confirm("这会删除本次失败启动创建的 Sub2API 本地容器卷，并重新初始化。首次安装还没有数据时可以使用。继续吗？");
+      if (!ok) {
+        setStatus("已取消重建。");
+        return;
+      }
+      run("powershell.exe -NoExit -NoProfile -ExecutionPolicy Bypass -File \"" + file + "\"", "正在重建本地容器和卷。完成后再打开管理台。");
+    }
+
     function openFolder() {
       run("explorer.exe \"" + workspace + "\"", "已打开项目目录。");
     }
@@ -289,7 +299,10 @@
       <div class="panel">
         <h2>停止服务</h2>
         <p>不用的时候关闭容器，数据会保留在本地 runtime 目录。</p>
-        <button class="warn" onclick="stopService()">停止服务</button>
+        <div class="row">
+          <button class="warn" onclick="stopService()">停止服务</button>
+          <button class="secondary" onclick="resetLocal()">修复首次启动</button>
+        </div>
       </div>
     </div>
 
